@@ -1,24 +1,29 @@
 class Solution {
 public:
     vector<int> rearrangeArray(vector<int>& nums) {
-        stack<int> pos, neg;
-        vector<int> ans;
         int n = nums.size();
-        for (int i = n - 1; i >= 0; i--) {
-            if (nums[i] >= 0)
-                pos.push(nums[i]);
-            else
-                neg.push(nums[i]);
-        }
-        for (int i = 0; i < nums.size(); i++) {
-            if (i & 1) {
-                ans.push_back(neg.top());
-                neg.pop();
+
+        // Initializing an answer array of size n
+        vector<int> ans(n, 0);
+
+        // Initializing two pointers to track even and 
+        // odd indices for positive and negative integers respectively
+        int posIndex = 0, negIndex=1;
+
+        for (int i = 0; i < n; i++) {
+            if (nums[i] > 0) {
+                // Placing the positive integer at the 
+                // desired index in ans and incrementing posIndex by 2
+                ans[posIndex] = nums[i];
+                posIndex+=2;
             } else {
-                ans.push_back(pos.top());
-                pos.pop();
+                // Placing the negative integer at the 
+                // desired index in ans and incrementing negIndex by 2
+                ans[negIndex] = nums[i];
+                negIndex += 2;
             }
         }
+
         return ans;
     }
 };
