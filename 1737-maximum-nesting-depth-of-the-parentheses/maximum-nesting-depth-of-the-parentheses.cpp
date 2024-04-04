@@ -9,6 +9,7 @@ public:
                 ans = max(ans, count);
             } else if (i == ')')
                 count--;
+             else continue;
         }
         return ans;
     }
