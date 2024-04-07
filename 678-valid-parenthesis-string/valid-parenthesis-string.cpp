@@ -2,22 +2,24 @@ class Solution {
 public:
     bool checkValidString(string s) {
         stack<int> left, star;
-        for(int i=0;i<s.size();i++){
-            if(s[i]=='('){
+        for (int i = 0; i < s.size(); i++) {
+            if (s[i] == '(') {
                 left.push(i);
-            }else if(s[i]=='*'){
+            } else if (s[i] == '*') {
                 star.push(i);
-            }else{
-                if(!left.empty()){
+            } else {
+                if (!left.empty()) {
                     left.pop();
-                }else if(!star.empty()){
+                } else if (!star.empty()) {
                     star.pop();
-                }else return false;
+                } else
+                    return false;
             }
         }
-        if(left.size()>star.size()) return false;
-        while(!left.empty() and !star.empty()){
-            if(left.top() > star.top()){
+        if (left.size() > star.size())
+            return false;
+        while (!left.empty() and !star.empty()) {
+            if (left.top() > star.top()) {
                 return false;
             }
             left.pop();
