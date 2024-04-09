@@ -1,8 +1,6 @@
 class Solution {
 public:
     int timeRequiredToBuy(vector<int>& tickets, int k) {
-        int sum = accumulate(tickets.begin(), tickets.end(), 0);
-        int store = tickets[k];
         int time = 0;
         for (int i = 0; i < tickets.size(); i++) {
             if(i <= k){
