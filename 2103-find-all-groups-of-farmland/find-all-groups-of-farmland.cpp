@@ -1,31 +1,48 @@
 class Solution {
 public:
-    void dfs(vector<vector<int>>& land,vector<vector<bool>>& vis, int i,int j,int& maxx, int& maxy, int& n, int& m){
-        if(i < 0 || j < 0 || j > m-1 || i > n-1) return;
-        if(vis[i][j]) return;
-        vis[i][j]=true;
-        if(land[i][j] == 0) return;
-        maxx = max(maxx, i);
-        maxy = max(maxy, j);
-        dfs(land, vis, i + 1, j, maxx,maxy, n, m);
-        dfs(land, vis, i - 1, j, maxx,maxy,n,m);
-        dfs(land, vis, i, j+1, maxx,maxy,n,m);
-        dfs(land, vis, i, j-1, maxx,maxy,n,m);
-    }
     vector<vector<int>> findFarmland(vector<vector<int>>& land) {
         int n = land.size();
         int m = land[0].size();
         vector<vector<bool>> vis(n, vector<bool>(m, false));
         vector<vector<int>> ans;
+        stack<pair<int, int>> stk;
+
+        auto isValid = [&](int i, int j) {
+            return i >= 0 && j >= 0 && i < n && j < m && !vis[i][j] && land[i][j] == 1;
+        };
+
+        auto dfs = [&](int i, int j) {
+            int maxx = i, maxy = j;
+            stk.push({i, j});
+            vis[i][j] = true;
+
+            while (!stk.empty()) {
+                auto [x, y] = stk.top();
+                stk.pop();
+                maxx = max(maxx, x);
+                maxy = max(maxy, y);
+
+                vector<pair<int, int>> dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+                for (auto [dx, dy] : dirs) {
+                    int nx = x + dx, ny = y + dy;
+                    if (isValid(nx, ny)) {
+                        stk.push({nx, ny});
+                        vis[nx][ny] = true;
+                    }
+                }
+            }
+
+            ans.push_back({i, j, maxx, maxy});
+        };
+
         for (int i = 0; i < n; ++i) {
             for (int j = 0; j < m; ++j) {
-                if (!vis[i][j] && land[i][j] == 1) {
-                    int maxx = 0, maxy = 0;
-                    dfs(land, vis, i, j, maxx, maxy, n, m);
-                    ans.push_back({i, j, maxx, maxy});
+                if (isValid(i, j)) {
+                    dfs(i, j);
                 }
             }
         }
+
         return ans;
     }
 };
