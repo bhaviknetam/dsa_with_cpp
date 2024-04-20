@@ -8,9 +8,9 @@ public:
         maxx = max(maxx, i);
         maxy = max(maxy, j);
         dfs(land, i + 1, j, maxx, maxy, n, m);
-        dfs(land, i - 1, j, maxx, maxy, n, m);
+        //dfs(land, i - 1, j, maxx, maxy, n, m);
         dfs(land, i, j + 1, maxx, maxy, n, m);
-        dfs(land, i, j - 1, maxx, maxy, n, m);
+        //dfs(land, i, j - 1, maxx, maxy, n, m);
     }
     vector<vector<int>> findFarmland(vector<vector<int>>& land) {
         ios_base::sync_with_stdio(false);
