@@ -1,71 +1,68 @@
-/*
-    Your Trie object will be instantiated and called as such:
-    Trie* obj = new Trie();
-    obj->insert(word);
-    bool check2 = obj->search(word);
-    bool check3 = obj->startsWith(prefix);
- */
-
-struct Node{
-    Node* links[26];
+struct Node {
+    Node* links[26] = {nullptr};
     bool flag = false;
 
-    bool containsKey(char ch){
-        return (links[ch - 'a'] != NULL);
-    }
-    void put(char ch, Node* node){
-        links[ch - 'a'] = node;
-    }
-    Node* get(char ch){
-        return links[ch - 'a'];
+    void setNode(char c) {
+        if (links[c - 'a'] == nullptr) {
+            links[c - 'a'] = new Node();
+        }
     }
 
+    Node* nextNode(char c) {
+        return links[c - 'a'];
+    }
+
+    bool isExist(char c) {
+        return links[c - 'a'] != nullptr;
+    }
+
+    void setEnd() {
+        flag = true;
+    }
+
+    bool isSet() {
+        return flag;
+    }
 };
 
 class Trie {
-
-private: Node* root;
+private:
+    Node* root;
 
 public:
-
-    /** Initialize your data structure here. */
     Trie() {
         root = new Node();
     }
-
-    /** Inserts a word into the trie. */
-    void insert(string word) {
+    
+    void insert(const string& word) {
         Node* node = root;
-        for(int i =0; i < word.length(); i++){
-            if(!node->containsKey(word[i])){
-                node->put(word[i], new Node());
+        for (char c : word) {
+            if (!node->isExist(c)) {
+                node->setNode(c);
             }
-            node = node->get(word[i]);
+            node = node->nextNode(c);
         }
-        node->flag = true;
+        node->setEnd();
     }
-
-    /** Returns if the word is in the trie. */
-    bool search(string word) {
+    
+    bool search(const string& word) {
         Node* node = root;
-        for(int i =0; i < word.length(); i++){
-            if(!node->containsKey(word[i])){
+        for (char c : word) {
+            if (!node->isExist(c)) {
                 return false;
             }
-            node = node->get(word[i]);
-
+            node = node->nextNode(c);
         }
-        return node->flag;
+        return node->isSet();
     }
-
-    /** Returns if there is any word in the trie that starts with the given prefix. */
-    bool startsWith(string prefix) {
+    
+    bool startsWith(const string& prefix) {
         Node* node = root;
-        for(int i =0; i < prefix.length(); i++){
-            if(!node->containsKey(prefix[i])){
+        for (char c : prefix) {
+            if (!node->isExist(c)) {
                 return false;
             }
-            node = node->get(prefix[i]);
+            node = node->nextNode(c);
         }
         return true;
     }
