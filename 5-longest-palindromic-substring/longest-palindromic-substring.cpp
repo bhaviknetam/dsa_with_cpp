@@ -1,33 +1,56 @@
 class Solution {
+private:
+    string temp;  // To store the transformed string
+
 public:
-    string longestPalindrome(string s) {
-        int sz = s.size();
-        vector<vector<int>> dp(sz + 1, vector<int>(sz + 1, 0));
-        for (int i = 0; i < sz; i++) {
-            dp[i][i] = 1;
-        }
-        int ans = 1, idx = -1;
-        for (int i = sz - 1; i >= 0; i--) {
-            for (int j = i + 1; j < sz; j++) {
-                if (j - i == 1) {
-                    if (s[i] == s[j]) {
-                        dp[i][j] = 1;
-                    }
-                } else {
-                    if (s[i] == s[j]) {
-                        dp[i][j] = dp[i + 1][j - 1];
-                    }
-                }
-                if (dp[i][j]) {
-                    if(ans < j - i+1){
-                        ans = j-i+1;
-                        idx=i;
-                    }
-                }
+    vector<int> manacher_odd(string s) {
+        temp = s;  // Store the transformed string
+        int n = s.size();
+        s = "$" + s + "^";
+        vector<int> p(n + 2);
+        int l = 1, r = 1;
+        for (int i = 1; i <= n; i++) {
+            p[i] = max(0, min(r - i, p[l + (r - i)]));
+            while (s[i - p[i]] == s[i + p[i]]) {
+                p[i]++;
+            }
+            if (i + p[i] > r) {
+                l = i - p[i];
+                r = i + p[i];
             }
         }
-        if(idx!=-1)
-        return s.substr(idx, ans);
-        return s.substr(0, 1);
+        return vector<int>(begin(p) + 1, end(p) - 1);
+    }
+
+    vector<int> manacher(string s) {
+        string t;
+        for (auto c : s) {
+            t += "#" + string(1, c);
+        }
+        t += "#";  // Append the trailing '#'
+        auto res = manacher_odd(t);
+        temp = t;  // Store the transformed string for later use
+        return res;
+    }
+
+    string longestPalindrome(string s) {
+        auto ans = manacher(s);
+        int longest_length = 0, idx = 0;
+        for (int i = 0; i < ans.size(); i++) {
+            if (ans[i] > longest_length) {
+                longest_length = ans[i];
+                idx = i;
+            }
+        }
+
+        // Calculate the start and length correctly in the transformed string
+        int start = idx - longest_length + 1;
+        int length = 2 * longest_length - 1;
+
+        string t = temp.substr(start, length);
+
+        // Remove '#' characters to get the original palindrome
+        t.erase(std::remove(t.begin(), t.end(), '#'), t.end());
+        return t;
     }
 };
