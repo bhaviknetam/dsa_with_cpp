@@ -1,22 +1,8 @@
 class Solution {
-private:
-    int store[2001][2001];
-    int solve(string& s, int i, int j, vector<vector<int>>& dp){
-        if(i >= j) return 0;
-        if(store[i][j] != -1){
-            return store[i][j];
-        }
-        if(dp[i][j])return store[i][j] = 0;
-        int ans = INT_MAX;
-        for(int k = i; k < j; k++){
-            ans = min(ans, 1 + solve(s, i, k, dp) +solve(s, k+1, j, dp));
-        }
-        return store[i][j] = ans;
-    }
 public:
     int minCut(string s) {
         int n = s.size();
-        vector<vector<int>> dp(n, vector<int>(n, 0));
+        vector<vector<bool>> dp(n, vector<bool>(n, 0));
         for(int i =0 ; i< n;i++){
             dp[i][i] = 1;
         }
