@@ -3,7 +3,7 @@ public:
     int maxPoints(vector<vector<int>>& p) {
         int n = p.size();
         if(n==1) return 1;
-        int iteration = 2000;
+        int iteration = 1500;
         int ans = 0;
         while (iteration--)
         {
