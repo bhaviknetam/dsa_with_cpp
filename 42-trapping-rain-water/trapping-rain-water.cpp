@@ -3,8 +3,7 @@ public:
     int trap(vector<int>& height) {
         int ans = 0;
         int n = height.size();
-        int max_height = height[0];
-        int idx = -1, mx = 0;
+        int idx = -1, mx = -1;
         for (int i = 0; i < n; i++) {
             if (mx < height[i]) {
                 mx = height[i];
@@ -20,7 +19,7 @@ public:
             }
         }
         mx = height[n - 1];
-        for (int i = n - 2; i >= idx and i >= 0; i--) {
+        for (int i = n - 2; i >= idx; i--) {
             if (height[i] >= mx) {
                 mx = height[i];
             } else {
