@@ -31,7 +31,7 @@ public:
                 if(emailPar.find(accounts[i][j]) == emailPar.end())
                     emailPar[accounts[i][j]] = i;
                 else{
-                    Union(i, emailPar[accounts[i][j]]);
+                    Union(par[i], emailPar[accounts[i][j]]);
                 }
             }
         }
