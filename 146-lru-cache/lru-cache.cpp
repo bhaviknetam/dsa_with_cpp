@@ -23,7 +23,7 @@ public:
             cache.erase(li.back().first);
             li.pop_back();
         }
-        li.push_front({key, value});
+        li.emplace_front(key, value);
         cache[key] = li.begin();
     }
 };
