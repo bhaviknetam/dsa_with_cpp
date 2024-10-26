@@ -10,27 +10,51 @@
  */
 class Solution {
 public:
-    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
-        ListNode* dummy = new ListNode(); // dummy node to simplify code
-        ListNode* current = dummy;
+    ListNode* addTwoNumbers(ListNode* list1, ListNode* list2) {
+        ListNode* list3 = new ListNode();
+        ListNode* temp = list3;
         int carry = 0;
-
-        while (l1 || l2 || carry) {
-            int sum = carry;
-            if (l1) {
-                sum += l1->val;
-                l1 = l1->next;
-            }
-            if (l2) {
-                sum += l2->val;
-                l2 = l2->next;
-            }
-
-            carry = sum / 10;
-            current->next = new ListNode(sum % 10);
-            current = current->next;
+        while(list1 and list2){
+            ListNode* node = new ListNode();
+            temp->next = node;
+            temp = node;
+            int sum = list1->val+list2->val+carry;
+            if(sum >= 10) {
+                carry = sum / 10;
+                sum = sum % 10;
+            }else carry = 0;
+            temp->val = sum;
+            list1 = list1->next;
+            list2 = list2->next;
         }
-
-        return dummy->next;
+        while(list1){
+            ListNode* node = new ListNode();
+            temp->next = node;
+            temp = node;
+            int sum = list1->val+carry;
+            if(sum >= 10) {
+                carry = sum / 10;
+                sum = sum % 10;
+            }else carry = 0;
+            temp->val = sum;
+            list1 = list1->next;
+        }
+        while(list2){
+            ListNode* node = new ListNode();
+            temp->next = node;
+            temp = node;
+            int sum = list2->val+carry;
+            if(sum >= 10) {
+                carry = sum / 10;
+                sum = sum % 10;
+            }else carry = 0;
+            temp->val = sum;
+            list2 = list2->next;
+        }
+        if(carry){
+            ListNode* node = new ListNode(carry);
+            temp->next = node;
+        }
+        return list3->next;
     }
 };
