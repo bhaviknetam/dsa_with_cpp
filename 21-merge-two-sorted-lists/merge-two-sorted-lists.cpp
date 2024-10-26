@@ -14,30 +14,24 @@ public:
         ListNode* list3 = new ListNode();
         ListNode* temp = list3;
         while(list1 and list2){
-            ListNode* node = new ListNode();
-            temp->next = node;
-            temp = node;
             if(list1->val < list2->val){
-                temp->val = list1->val;
+                temp->next = list1;
                 list1 = list1->next;
             }else{
-                temp->val = list2->val;
+                temp->next = list2;
                 list2 = list2->next;
             }
+            temp = temp->next;
         }
         while(list1){
-            ListNode* node = new ListNode();
-            temp->next = node;
-            temp = node;
-            temp->val = list1->val;
+            temp->next = list1;
             list1 = list1->next;
+            temp = temp->next;
         }
         while(list2){
-            ListNode* node = new ListNode();
-            temp->next = node;
-            temp = node;
-            temp->val = list2->val;
+            temp->next = list2;
             list2 = list2->next;
+            temp = temp->next;
         }
         return list3->next;
     }
