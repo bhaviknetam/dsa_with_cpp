@@ -4,21 +4,20 @@ public:
         int n = nums.size();
         vector<vector<int>> ans;
         sort(nums.begin(), nums.end());
-        for(int k = 0; k < n - 2; k++){
-            if(k > 0 && nums[k] == nums[k-1])continue;
-            int target = -nums[k];
-            int i = k + 1, j = n - 1;
-            while(i < j){
-                if(target - nums[j] > nums[i]) i++;
-                else if(target - nums[i] < nums[j]) j--;
-                else{
-                    ans.push_back({nums[k], nums[i], nums[j]});
-                    while (i < j && nums[i] == nums[i + 1]) i++;
-                    while (i < j && nums[j] == nums[j - 1]) j--;
-                    i++;
-                    j--;
+        unordered_map<int,int> m;
+        for(int i = 0; i < n; i++){
+            m[nums[i]] = i;
+        }
+        for(int i = 0; i < n-2; i++){
+            if(nums[i] > 0) break;
+            for(int j = i + 1; j < n - 1; j++){
+                int target = -nums[i]-nums[j];
+                if(m.count(target) && m[target] > j){
+                    ans.push_back({nums[i], nums[j], target});
                 }
+                j = m[nums[j]];
             }
+            i = m[nums[i]];
         }
         return ans;
     }
