@@ -14,7 +14,7 @@ public:
                 hi = mid;
             }
         }
-        idx = lo;
+        idx = hi;
         if (target >= nums[idx] && target <= nums[n - 1]) {
             lo = idx;
             hi = n - 1;
