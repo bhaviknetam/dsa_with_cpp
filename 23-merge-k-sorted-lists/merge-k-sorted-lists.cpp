@@ -11,20 +11,23 @@
 class Solution {
 public:
     ListNode* mergeKLists(vector<ListNode*>& lists) {
-        vector<int> store;
+        auto comp = [](ListNode* l1, ListNode* l2){
+            return l1->val > l2->val;
+        };
+        priority_queue<ListNode*,vector<ListNode*>,decltype(comp)> pq(comp);
         for(auto& list : lists){
-            while(list != NULL){
-                store.push_back(list->val);
-                list = list->next;
-            }
+            if(list) pq.push(list);
         }
-        sort(store.begin(), store.end());
-        ListNode* ans = new ListNode();
-        ListNode* curr = ans;
-        for(int& num : store){
-            curr->next=new ListNode(num);
-            curr=curr->next;
+        ListNode* head = new ListNode();
+        ListNode* curr = head;
+        while(!pq.empty()){
+            auto list = pq.top();
+            pq.pop();
+            curr->next = list;
+            list = list->next;
+            if(list) pq.push(list);
+            curr = curr->next;
         }
-        return ans->next;
+        return head->next;
     }
 };
