@@ -4,7 +4,7 @@ public:
         int i = 0, j = 0;
         int n = s.size();
         int ans = 0;
-        unordered_map<char, int> m;
+        map<char, int> m;
         while(i < n){
             while(m.count(s[i])){
                 m.erase(s[j]);
