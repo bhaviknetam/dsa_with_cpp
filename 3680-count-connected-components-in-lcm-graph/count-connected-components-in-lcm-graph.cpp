@@ -1,42 +1,49 @@
 class Solution {
 private:
     unordered_set<int> s;
-    unordered_map<int, int> parent;
+    vector<int> parent;
 
 public:
     int find(int x) {
-        if(parent.find(x) == parent.end()) return x;
-        while (x != parent[x]) {
-            parent[x] = parent[parent[x]];
-            x = parent[x];
+        if (parent[x] != x) {
+            parent[x] = find(parent[x]); // Path compression
         }
-        return x;
+        return parent[x];
     }
 
     void Union(int a, int b) {
         a = find(a);
         b = find(b);
         if (a != b) {
-            if (s.count(a) && s.count(b)) {
-                parent[max(a, b)] = min(a, b);
-                return;
-            }
-            if (s.find(a) == s.end())
+            if(s.count(a) && s.count(b))
+                if (a > b)
+                    swap(a, b);
+            else if(!s.count(a)){
                 swap(a, b);
+            }
             parent[b] = a;
         }
     }
     int countComponents(vector<int>& nums, int threshold) {
+        parent.resize(threshold+1);
+        for(int i = 0; i <= threshold; i++) parent[i] = i;
         for (int& num : nums)
-            s.insert(num), parent[num] = num;
-        for(int& num:nums){
-            for(int i = 2*num; i <= threshold; i += num){
-                Union(num, i);
+            s.insert(num);
+        for(int i = 1; i <= threshold; i++){
+            for(int j = 1; j * j <= i; j++){
+                if(i % j == 0){
+                    if(s.count(j))
+                        Union(j, i);
+                    if(i/j != j && s.count(i/j))
+                        Union(i/j, i);
+                }
             }
         }
-        unordered_set<int> ans;
+        set<int> ans;
         for(int &num:nums){
-            ans.insert(find(num));
+            if(num <= threshold)
+                ans.insert(find(num));
+            else ans.insert(num);
         }
         return ans.size();
     }
