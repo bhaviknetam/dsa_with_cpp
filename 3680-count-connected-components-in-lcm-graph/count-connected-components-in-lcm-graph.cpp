@@ -27,9 +27,10 @@ public:
     int countComponents(vector<int>& nums, int threshold) {
         parent.resize(threshold+1);
         for(int i = 0; i <= threshold; i++) parent[i] = i;
+        int mini = INT_MAX;
         for (int& num : nums)
-            s.insert(num);
-        for(int i = 1; i <= threshold; i++){
+            s.insert(num), mini = min(mini, num);
+        for(int i = mini; i <= threshold; i++){
             for(int j = 1; j * j <= i; j++){
                 if(i % j == 0){
                     if(s.count(j))
