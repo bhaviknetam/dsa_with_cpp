@@ -5,7 +5,7 @@ public:
         vector<int> result(n);
         for (int i = 0; i < n; i++) {
             if (nums[i] < 0) {
-                result[i] = nums[(i - abs(nums[i]) % n + n) % n];
+                result[i] = nums[(i + nums[i] % n + n) % n];
             } else if (nums[i] > 0) {
                 result[i] = nums[(i + nums[i] % n) % n];
             } else
