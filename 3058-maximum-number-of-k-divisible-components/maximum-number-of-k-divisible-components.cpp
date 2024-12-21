@@ -5,7 +5,6 @@ private:
     vector<vector<int>> g; // Adjacency list
 
 public:
-    // First DFS: Calculate subtree sums
     long long dfs1(int node, int par, vector<int>& values) {
         long long val = values[node];
         for (int& child : g[node]) {
@@ -16,18 +15,16 @@ public:
         return sum[node] = val;
     }
 
-    // Second DFS: Count K-divisible components
     void dfs2(int node, int par, int& k, long long totalSum) {
         for (int& child : g[node]) {
             if (child != par) {
                 long long temp = sum[child];
                 dfs2(child, node, k, totalSum);
-                // Check K-divisibility condition for the subtree
                 if (sum[child] % k == 0) {
-                    ans++;  // Increment the count of components
+                    ans++;
                     sum[node] -= sum[child];
                 }
-                sum[node] -= (temp - sum[child]);
+                // sum[node] -= (temp - sum[child]);
             }
         }
     }
