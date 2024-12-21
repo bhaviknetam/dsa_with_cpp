@@ -15,10 +15,10 @@ public:
         return sum[node] = val;
     }
 
-    void dfs2(int node, int par, int& k, long long totalSum) {
+    void dfs2(int node, int par, int& k) {
         for (int& child : g[node]) {
             if (child != par) {
-                dfs2(child, node, k, totalSum);
+                dfs2(child, node, k);
                 if (sum[child] % k == 0) {
                     ans++;
                     sum[node] -= sum[child];
@@ -28,28 +28,19 @@ public:
     }
 
     int maxKDivisibleComponents(int n, vector<vector<int>>& edges, vector<int>& values, int k) {
-        if (n == 1) return 1; // Edge case: Single node
-
-        // Initialize variables
+        if (n == 1) return 1;
         sum.resize(n, 0);
         g.resize(n, vector<int>());
 
-        // Build adjacency list
         for (auto& edge : edges) {
             g[edge[0]].push_back(edge[1]);
             g[edge[1]].push_back(edge[0]);
         }
 
-        // First DFS: Calculate subtree sums
         long long totalSum = dfs1(0, -1, values);
-
-        // Initialize result
         ans = 0;
 
-        // Second DFS: Count K-divisible components
-        dfs2(0, -1, k, totalSum);
-
-        // Include the root component
+        dfs2(0, -1, k);
         return ans + 1;
     }
 };
