@@ -18,13 +18,11 @@ public:
     void dfs2(int node, int par, int& k, long long totalSum) {
         for (int& child : g[node]) {
             if (child != par) {
-                long long temp = sum[child];
                 dfs2(child, node, k, totalSum);
                 if (sum[child] % k == 0) {
                     ans++;
                     sum[node] -= sum[child];
                 }
-                // sum[node] -= (temp - sum[child]);
             }
         }
     }
