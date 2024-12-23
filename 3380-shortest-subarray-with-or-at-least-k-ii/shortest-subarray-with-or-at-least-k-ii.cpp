@@ -2,9 +2,9 @@ class Solution {
 public:
     int minimumSubarrayLength(vector<int>& nums, int target) {
         int n = nums.size();
-        vector<vector<int>> countArr(n + 1, vector<int>(32, 0));
+        vector<vector<int>> countArr(n + 1, vector<int>(31, 0));
         for (int i = 1; i <= n; i++) {
-            for (int j = 0; j < 32; j++) {
+            for (int j = 0; j < 31; j++) {
                 countArr[i][j] += countArr[i - 1][j];
                 if ((nums[i - 1] >> j) & 1)
                     countArr[i][j]++;
@@ -17,7 +17,7 @@ public:
             while (j <= i && totalOR >= target) {
                 ans = min(ans, i - j + 1);
                 int nextOR = 0;
-                for (int k = 0; k < 32; k++) {
+                for (int k = 0; k < 31; k++) {
                     int ct = countArr[i][k] - countArr[j][k];
                     if (ct > 0)
                         nextOR |= (1 << k);
