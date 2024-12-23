@@ -7,12 +7,10 @@ public:
         for (int i = 0; i < n; i++) {
             q.push(nums[i]);
             sum += nums[i];
-            if (sum >= target) {
-                while (sum >= target) {
-                    ans = min(ans, (int)q.size());
-                    sum -= q.front();
-                    q.pop();
-                }
+            while (sum >= target) {
+                ans = min(ans, (int)q.size());
+                sum -= q.front();
+                q.pop();
             }
         }
         return (ans != INT_MAX) ? ans : 0;
