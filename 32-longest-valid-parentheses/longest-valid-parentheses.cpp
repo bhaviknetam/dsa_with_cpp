@@ -14,7 +14,7 @@ public:
         }
         int b = s.size(), ans = 0;
         while(!st.empty()){
-            cout << st.top()<<';';
+            // cout << st.top()<<';';
             ans = max(ans, b - st.top() - 1);
             b = st.top();
             st.pop();
