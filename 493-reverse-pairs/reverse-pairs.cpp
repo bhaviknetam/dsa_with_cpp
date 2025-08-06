@@ -1,21 +1,54 @@
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
-using namespace __gnu_pbds;
+class Fenwick {
+private:
+    vector<int> bit;
+    int n;
 
-using ordered_set = tree<long long, null_type, less_equal<long long>,
-                         rb_tree_tag, tree_order_statistics_node_update>;
+public:
+    Fenwick(int _n) : n(_n), bit(_n, 0) {}
+
+    int sum(int r) {
+        int ans = 0;
+        for (; r >= 0; r = (r & (r + 1)) - 1) {
+            ans += bit[r];
+        }
+        return ans;
+    }
+
+    int sum(int l, int r) { return sum(r) - sum(l - 1); }
+
+    void add(int idx, int delta) {
+        for (; idx < n; idx = idx | (idx + 1)) {
+            bit[idx] += delta;
+        }
+    }
+    void print() {
+        for (int i = 0; i < n; i++)
+            cout << bit[i] << ';';
+    }
+};
 
 class Solution {
 public:
     int reversePairs(vector<int>& nums) {
-        ordered_set os;
-        int ans = 0;
         int n = nums.size();
-        for (int i = n - 1; i >= 0; i--) {
-            ans += os.order_of_key((long long)nums[i]);
-            os.insert((long long)2 * nums[i]);
+        int id = 0;
+        map<long long, int> m;
+        vector<int> temp = nums;
+        sort(temp.begin(), temp.end());
+        for (int& num : temp) {
+            if (m.find(num) == m.end())
+                m[num] = id++;
         }
-
+        auto bit = Fenwick(id + 1);
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            long long val = 2LL * nums[i];
+            auto ptr = m.upper_bound(val);
+            if (ptr != m.end()) {
+                ans += bit.sum(ptr->second, id);
+            }
+            bit.add(m[nums[i]], 1);
+        }
         return ans;
     }
 };
