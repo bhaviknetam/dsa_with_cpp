@@ -10,11 +10,17 @@
  */
 class Solution {
 public:
-    void reverse(ListNode* node, ListNode* prev){
-        if(node == nullptr) return;
-        reverse(node->next, node);
-        node->next = prev;
+    ListNode* reverse(ListNode* head) {
+        ListNode* prev = nullptr;
+        while (head) {
+            ListNode* nextNode = head->next;
+            head->next = prev;
+            prev = head;
+            head = nextNode;
+        }
+        return prev;
     }
+
     bool isPalindrome(ListNode* head) {
         int len = 1;
         ListNode* curr = head;
@@ -26,7 +32,7 @@ public:
         for(int i = 0; i < len / 2; i++){
             mid = mid->next;
         }
-        reverse(mid->next, mid);
+        curr = reverse(mid);
         mid->next = nullptr;
         while(head && curr){
             if(curr->val != head->val) return false;
