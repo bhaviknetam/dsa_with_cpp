@@ -9,18 +9,9 @@
 class Solution {
 public:
     void deleteNode(ListNode* node) {
-        if(!node->next){
-            delete node;
-            return;
-        }
-        ListNode* nxt = node->next;
-        while(nxt->next){
-            swap(node->val, nxt->val);
-            node = nxt;
-            nxt = nxt->next;
-        }
-        swap(node->val, nxt->val);
-        delete nxt;
-        node->next = nullptr;
+        ListNode* temp = node->next;
+        node->val = temp->val;
+        node->next = temp->next;
+        delete temp;
     }
 };
