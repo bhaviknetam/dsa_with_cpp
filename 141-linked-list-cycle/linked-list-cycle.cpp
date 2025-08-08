@@ -9,10 +9,16 @@
 class Solution {
 public:
     bool hasCycle(ListNode *head) {
-        while(head){
-            if(head->val == INT_MAX) return true;
-            head->val = INT_MAX;
-            head = head->next;
+        if(!head || !head->next) return false;
+        ListNode* hare = head;
+        ListNode* tortoise = head;
+        while(true){
+            if(!hare) return false;
+            hare = hare->next;
+            if(!hare) return false;
+            hare = hare->next;
+            tortoise = tortoise->next;
+            if(hare == tortoise) return true;
         }
         return false;
     }
