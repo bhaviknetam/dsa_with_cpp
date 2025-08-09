@@ -13,13 +13,10 @@ public:
     ListNode* findSecond(ListNode* head){
         if(!head) return head;
         ListNode* slow = head;
-        ListNode* fast = head;
-        while(true){
-            fast = fast->next;
-            if(fast == nullptr) return slow;
-            fast = fast->next;
-            if(fast == nullptr) return slow;
+        ListNode* fast = head->next;
+        while(fast && fast->next){
             slow = slow->next;
+            fast = fast->next->next;
         }
         return slow;
     }
