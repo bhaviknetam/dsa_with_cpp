@@ -37,16 +37,7 @@ public:
             }
             prev = prev->next;
         }
-        while(first){
-            prev->next = first;
-            first = first->next;
-            prev = prev->next;
-        }
-        while(second){
-            prev->next = second;
-            second = second->next;
-            prev = prev->next;
-        }
+        prev->next = first ? first : second;
         return dummy->next;
     }
 
