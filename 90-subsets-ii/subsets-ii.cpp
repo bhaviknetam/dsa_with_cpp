@@ -3,9 +3,7 @@ private: set<vector<int>> s;
 public:
     void helper(int i, vector<int>& curr, vector<int>& nums){
         if(i == nums.size()){
-            vector<int> t = curr;
-            sort(t.begin(), t.end());
-            s.insert(t);
+            s.insert(curr);
             return;
         }
         helper(i+1, curr, nums);
@@ -15,6 +13,7 @@ public:
     }
     vector<vector<int>> subsetsWithDup(vector<int>& nums) {
         vector<int> curr;
+        sort(nums.begin(), nums.end());
         helper(0, curr, nums);
         return vector<vector<int>>(s.begin(), s.end());
     }
