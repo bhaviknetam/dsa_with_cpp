@@ -13,6 +13,7 @@ public:
         }
     }
     vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        sort(candidates.begin(), candidates.end());
         vector<int> v;
         backtrack(0, target, v, candidates);
         return ans;
