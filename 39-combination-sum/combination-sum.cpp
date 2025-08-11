@@ -1,28 +1,23 @@
 class Solution {
+private: vector<vector<int>> ans;
 public:
-    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
-        vector<bool> present(target + 1, false);
-        vector<vector<vector<int>>> store(target + 1);
-        for (int& val : candidates)
-            if (val <= target)
-                present[val] = true, store[val].push_back({{val}});
-        for (int i = 1; i <= target; i++) {
-            if (!present[i])
-                continue;
-            auto t = store[i];
-            for (auto& v : t) {
-                int last = v.back();
-                for (int& c : candidates) {
-                    if (c < last)
-                        continue;
-                    if(i + c > target) continue;
-                    present[i + c] = true;
-                    vector<int> p = v;
-                    p.push_back(c);
-                    store[i + c].push_back(p);
-                }
-            }
+    void backtrack(int i, int target, vector<int> curr, vector<int>& candidates){
+        if(target < 0) return;
+        if(target == 0){
+            ans.push_back(curr);
         }
-        return store[target];
+        for(int j = i; j < candidates.size(); j++){
+            int c = candidates[j];
+            if(target < c) continue;
+            curr.push_back(c);
+            backtrack(j, target - c, curr, candidates);
+            curr.pop_back();
+        }
+    }
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        sort(candidates.begin(), candidates.end());
+        vector<int> v;
+        backtrack(0, target, v, candidates);
+        return ans;
     }
 };
