@@ -7,8 +7,10 @@ public:
             ans.push_back(curr);
         }
         for(int j = i; j < candidates.size(); j++){
-            curr.push_back(candidates[j]);
-            backtrack(j, target - candidates[j], curr, candidates);
+            int c = candidates[j];
+            if(target < c) continue;
+            curr.push_back(c);
+            backtrack(j, target - c, curr, candidates);
             curr.pop_back();
         }
     }
