@@ -1,14 +1,10 @@
 class Solution {
 private: string ans;
+         vector<int> fact;
 public:
-    int fact(int n){
-        int ans = 1;
-        for(int i = 1; i <= n; i++) ans *= i;
-        return ans;
-    }
     void helper(int n, int k, set<int>& s){
         if(n == 0) return;
-        int f = fact(n);
+        int f = fact[n];
         int d = f / n;
         int q = k / d;
         k -= q * d;
@@ -20,6 +16,10 @@ public:
     string getPermutation(int n, int k) {
         set<int> s;
         for(int i = 1; i <= n; i++) s.insert(i);
+        fact.resize(n + 1, 1);
+        for(int i = 2; i <=n; i++){
+            fact[i] = i * fact[i-1];
+        }
         helper(n, k - 1, s);
         return ans;
     }
