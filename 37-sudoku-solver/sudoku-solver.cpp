@@ -53,5 +53,9 @@ public:
         }
         helper(0, 0, board);
         board = ans;
+        ans.clear();
+        visRow.clear();
+        visCol.clear();
+        visBox.clear();
     }
 };
