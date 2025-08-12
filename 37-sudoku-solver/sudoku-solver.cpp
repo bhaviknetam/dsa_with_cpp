@@ -1,6 +1,5 @@
 class Solution {
 private:
-    vector<vector<char>> ans;
     vector<vector<bool>> visRow, visCol, visBox;
 public:
     int getBox(int r, int c){
@@ -10,33 +9,24 @@ public:
         return block;
     }
 
-    void helper(int row, int col, vector<vector<char>>& board) {
-        if (row == 9) {
-            ans = board;
-            return;
-        }
-        if (board[row][col] != '.') {
-            if (col + 1 == 9) {
-                helper(row + 1, 0, board);
-            } else {
-                helper(row, col + 1, board);
-            }
-        } else {
-            int box = getBox(row, col);
-            for (int i = 1; i <= 9; i++) {
-                if (!visRow[row][i] && !visCol[col][i] && !visBox[box][i]) {
-                    visRow[row][i] = visCol[col][i] = visBox[box][i] = 1;
-                    board[row][col] = i + '0';
-                    if (col + 1 == 9) {
-                        helper(row + 1, 0, board);
-                    } else {
-                        helper(row, col + 1, board);
+    bool helper(vector<vector<char>>& board) {
+        for(int i = 0; i < 9; i++){
+            for(int j = 0; j < 9; j++){
+                if(board[i][j] != '.') continue;
+                int box = getBox(i, j);
+                for(int k = 1; k <= 9; k++){
+                    if(!visRow[i][k] && !visCol[j][k]&& !visBox[box][k]){
+                        visRow[i][k]=visCol[j][k]=visBox[box][k]=1;
+                        board[i][j] = k + '0';
+                        if(helper(board)) return true;
+                        board[i][j] = '.';
+                        visRow[i][k]=visCol[j][k]=visBox[box][k]=0;
                     }
-                    visRow[row][i] = visCol[col][i] = visBox[box][i] = 0;
-                    board[row][col] = '.';
                 }
+                return false;
             }
         }
+        return true;
     }
 
     void solveSudoku(vector<vector<char>>& board) {
@@ -51,9 +41,7 @@ public:
                 visBox[getBox(i,j)][board[i][j]-'0']=true;
             }
         }
-        helper(0, 0, board);
-        board = ans;
-        ans.clear();
+        helper(board);
         visRow.clear();
         visCol.clear();
         visBox.clear();
