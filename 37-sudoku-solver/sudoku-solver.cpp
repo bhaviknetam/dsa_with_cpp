@@ -9,8 +9,8 @@ public:
         return block;
     }
 
-    bool helper(vector<vector<char>>& board) {
-        for(int i = 0; i < 9; i++){
+    bool helper(int row, vector<vector<char>>& board) {
+        for(int i = row; i < 9; i++){
             for(int j = 0; j < 9; j++){
                 if(board[i][j] != '.') continue;
                 int box = getBox(i, j);
@@ -18,7 +18,7 @@ public:
                     if(!visRow[i][k] && !visCol[j][k]&& !visBox[box][k]){
                         visRow[i][k]=visCol[j][k]=visBox[box][k]=1;
                         board[i][j] = k + '0';
-                        if(helper(board)) return true;
+                        if(helper(i, board)) return true;
                         board[i][j] = '.';
                         visRow[i][k]=visCol[j][k]=visBox[box][k]=0;
                     }
@@ -41,7 +41,7 @@ public:
                 visBox[getBox(i,j)][board[i][j]-'0']=true;
             }
         }
-        helper(board);
+        helper(0, board);
         visRow.clear();
         visCol.clear();
         visBox.clear();
