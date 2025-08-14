@@ -6,7 +6,7 @@ public:
             int mid = l + ((r - l) >> 1);
             if(mid + 1 <= r && nums[mid] == nums[mid + 1]){
                 if(!(mid & 1)) l = mid;
-                else r = mid ;
+                else r = mid - 1;
             }
             else if(mid - 1 >= l && nums[mid] == nums[mid - 1]){
                 if(!((mid + 1) & 1)) l = mid + 1;
