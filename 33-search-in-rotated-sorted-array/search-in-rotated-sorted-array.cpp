@@ -2,34 +2,25 @@ class Solution {
 public:
     int search(vector<int>& nums, int target) {
         int n = nums.size();
-        if(n == 1) {
-            return (nums[0]==target)?0:-1;
-        }
-        int idx = 0, lo = 0, hi = n - 1;
-        while(lo < hi){
-            int mid = lo + (hi - lo)/2;
-            if(nums[mid] > nums[n-1]){
-                lo = mid + 1;
+        int l = -1, r = n - 1;
+        while(r - l > 1){
+            int mid = l + ((r-l)>>1);
+            if(nums[mid] >= nums[l + 1] && nums[mid] >= nums[r]){
+                l = mid;
             }else{
-                hi = mid;
+                r = mid;
             }
         }
-        idx = hi;
-        if (target >= nums[idx] && target <= nums[n - 1]) {
-            lo = idx;
-            hi = n - 1;
-        } else {
-            lo = 0;
-            hi = idx - 1;
+        int k = n - r;
+        k %= n;
+        // cout << r <<';';
+        l = r, r = n + l;
+        while(r - l > 1){
+            int mid = l + ((r-l)>>1);
+            if(nums[mid % n] <= target) l = mid;
+            else r = mid;
         }
-        
-        while (lo <= hi) {
-            int mid = lo + (hi - lo) / 2;
-            if (nums[mid] == target) return mid;
-            else if (nums[mid] < target) lo = mid + 1;
-            else hi = mid - 1;
-        }
-        
-        return -1;
+        l %= n;
+        return (nums[l] == target) ? l : -1;
     }
 };
