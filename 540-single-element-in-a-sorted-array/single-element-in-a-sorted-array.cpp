@@ -2,7 +2,6 @@ class Solution {
 public:
     int singleNonDuplicate(vector<int>& nums) {
         int l = 0, r = nums.size() - 1;
-        if(r == 1) return nums[0];
         while(l <= r){
             int mid = l + ((r - l) >> 1);
             if(mid + 1 <= r && nums[mid] == nums[mid + 1]){
