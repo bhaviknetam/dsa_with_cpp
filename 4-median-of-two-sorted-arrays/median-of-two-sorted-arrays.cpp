@@ -18,19 +18,14 @@ public:
             }else if(j < m && i > 0 && nums2[j] < nums1[i - 1]){
                 hi = i - 1;
             }else{
-                if(i == 0){
-                    median = nums2[j - 1];
-                }else if(j == 0){
-                    median = nums1[i - 1];
-                }else{
-                    median = max(nums1[i - 1], nums2[j - 1]);
-                }
-                break;
+                int l1 = (i == 0) ? INT_MIN : nums1[i-1];
+                int l2 = (j == 0) ? INT_MIN : nums2[j-1];
+                if((n + m) & 1) return max(l1, l2);
+                int r1 = (i < n) ? nums1[i] : INT_MAX;
+                int r2 = (j < m) ? nums2[j] : INT_MAX;
+                return (max(l1, l2) + min(r1, r2)) / 2.0;
             }
         }
-        if((n + m) & 1) return (double)median;
-        if(i == n) return (median + nums2[j])/2.0;
-        if(j == m) return (median + nums1[i])/2.0;
-        return (median + min(nums1[i], nums2[j]))/2.0;
+        return -1;
     }
 };
