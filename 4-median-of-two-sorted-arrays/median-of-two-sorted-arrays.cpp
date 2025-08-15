@@ -1,27 +1,38 @@
 class Solution {
 public:
-    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
-        int n1 = nums1.size();
-        int n2 = nums2.size();
-        if(n1 > n2) swap(nums1, nums2), swap(n1, n2);
-        int n = n1 + n2;
-        int left = (n+1)/2;
-        int lo = 0, hi = n1;
+    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2){
+        int n = nums1.size();
+        int m = nums2.size();
+        if(n > m) return findMedianSortedArrays(nums2, nums1);
+        int midIdx = (n + m + 1) / 2;
+        int lo = 0, hi = n , i, j, median;
         while(lo <= hi){
-            int mid1 = (lo+hi)>>1;
-            int mid2 = left-mid1;
-            int l1 = INT_MIN, l2 = INT_MIN;
-            int r1 = INT_MAX, r2 = INT_MAX;
-            if(mid1 >= 1) l1 = nums1[mid1-1];
-            if(mid1 < n1) r1 = nums1[mid1];
-            if(mid2 >= 1) l2 = nums2[mid2-1];
-            if(mid2 < n2) r2 = nums2[mid2];
-            if(l1 > r2) hi = mid1-1;
-            else if(l2 > r1) lo = mid1+1;
-            else{
-              return (n & 1)?max(l1, l2):(max(l1, l2)+min(r1,r2))/2.0;
+            i = ((lo + hi) >> 1);
+            j = midIdx - i;
+            if(j < 0){
+                hi = i - 1;
+                continue;
+            }
+            if(i < n && j > 0 && nums2[j - 1] > nums1[i]){
+                lo = i + 1;
+            }else if(j < m && i > 0 && nums2[j] < nums1[i - 1]){
+                hi = i - 1;
+            }else{
+                if(i == 0){
+                    median = nums2[j - 1];
+                }else if(j == 0){
+                    median = nums1[i - 1];
+                }else{
+                    median = max(nums1[i - 1], nums2[j - 1]);
+                }
+                break;
             }
         }
-        return 0;
+        cout << median << ';';
+        if((n + m) & 1) return (double)median;
+        cout << i << ' '<<j <<'/';
+        if(i == n) return (median + nums2[j])/2.0;
+        if(j == m) return (median + nums1[i])/2.0;
+        return (median + min(nums1[i], nums2[j]))/2.0;
     }
 };
