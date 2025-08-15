@@ -28,9 +28,7 @@ public:
                 break;
             }
         }
-        cout << median << ';';
         if((n + m) & 1) return (double)median;
-        cout << i << ' '<<j <<'/';
         if(i == n) return (median + nums2[j])/2.0;
         if(j == m) return (median + nums1[i])/2.0;
         return (median + min(nums1[i], nums2[j]))/2.0;
