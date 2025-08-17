@@ -18,6 +18,6 @@ public:
                 if(ans.size() == k) return ans;
             }
         }
-        return {};
+        return ans;
     }
 };
