@@ -34,7 +34,6 @@ public:
     }
     
     bool empty() {
-        cout << q.front() << '\n';
         return q.empty();
     }
 };
