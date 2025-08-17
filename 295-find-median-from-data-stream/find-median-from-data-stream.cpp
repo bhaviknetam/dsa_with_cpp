@@ -1,31 +1,24 @@
 class MedianFinder {
 private: 
-    vector<int> nums;
-    void insertionSort(){
-        int n = nums.size();
-        int i = 0;
-        while(i < n){
-            if(nums[i] > nums[n - 1]){
-                swap(nums[i], nums[n-1]);
-            }
-            i++;
-        }
-    }
+    priority_queue<int> lo;
+    priority_queue<int, vector<int>, greater<int>> hi;
 
 public:
     MedianFinder() {}
     
     void addNum(int num) {
-        auto it = lower_bound(nums.begin(), nums.end(), num);
-        nums.insert(it, num);
+        lo.push(num);
+        hi.push(lo.top());
+        lo.pop();
+        if(hi.size() > lo.size()){
+            lo.push(hi.top());
+            hi.pop();
+        }
     }
     
     double findMedian() {
-        int n = nums.size();
-        // for(int i : nums) cout << i << ';';
-        cout<< endl;
-        if(n & 1) return (double)nums[n / 2];
-        return (nums[n / 2] + nums[n / 2 - 1])/ 2.0;
+        if((lo.size() + hi.size()) & 1) return (double)lo.top();
+        return (lo.top() + hi.top()) / 2.0;
     }
 };
 
