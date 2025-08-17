@@ -5,32 +5,22 @@ public:
     MyStack() {}
     
     void push(int x) {
+        int s = q.size();
         q.push(x);
-    }
-    
-    int pop() {
-        int s = q.size() - 1;
-        while(s--){
-            // cout << q.front() << ';';
+        for(;s;--s){
             q.push(q.front());
             q.pop();
         }
+    }
+    
+    int pop() {
         int x = q.front();
         q.pop();
         return x;
     }
     
     int top() {
-        int s = q.size() - 1;
-        while(s--){
-            // cout << q.front() << ';';
-            q.push(q.front());
-            q.pop();
-        }
-        int x = q.front();
-        q.push(q.front());
-        q.pop();
-        return x;
+        return q.front();
     }
     
     bool empty() {
