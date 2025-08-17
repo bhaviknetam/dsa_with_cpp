@@ -38,18 +38,32 @@ private:
         return curr;
     }
 
+    struct Comp{
+        bool operator()(ListNode* a, ListNode* b){
+            return a->val > b->val;
+        }
+    };
+
 public:
     ListNode* mergeKLists(vector<ListNode*>& lists) {
         int n = lists.size();
         if(n < 1) return NULL;
-        int adder = 1;
-        while (adder < n) {
-            for (int i = 0; i + adder < n; i += (adder << 1)) {
-                lists[i] = mergeTwoLists(lists[i], lists[i + adder]);
-            }
-            adder <<= 1;
+        if(n == 1) return lists[0];
+        priority_queue<ListNode*, vector<ListNode*>, Comp> pq;
+        for(int i = 0; i < n; i++){
+            if(lists[i])
+                pq.push(lists[i]);
         }
-
-        return lists[0];
+        ListNode dummy(0);
+        ListNode* curr = &dummy;
+        while(!pq.empty()){
+            auto node = pq.top();
+            pq.pop();
+            curr->next = node;
+            if(node->next)
+                pq.push(node->next);
+            curr = curr->next;
+        }
+        return dummy.next;
     }
 };
