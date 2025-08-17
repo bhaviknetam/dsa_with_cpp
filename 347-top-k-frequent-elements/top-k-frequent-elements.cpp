@@ -6,18 +6,18 @@ public:
         for(int i = 0; i < n; i++){
             m[nums[i]]++;
         }
-        priority_queue<pair<int, int>,
-                    vector<pair<int, int>>,
-                    greater<pair<int, int>>> pq;
+        vector<vector<int>> buckets(n + 1);
         for(auto& [num, freq] : m){
-            pq.push({freq, num});
-            if(pq.size() > k) pq.pop();
+            cout << num << ' ' << freq << endl;
+            buckets[freq].push_back(num);
         }
         vector<int> ans;
-        while(!pq.empty()){
-            ans.push_back(pq.top().second);
-            pq.pop();
+        for(int i = n; i >= 0; i--){
+            for(int j = 0; j < buckets[i].size(); j++){
+                ans.push_back(buckets[i][j]);
+                if(ans.size() == k) return ans;
+            }
         }
-        return ans;
+        return {};
     }
 };
