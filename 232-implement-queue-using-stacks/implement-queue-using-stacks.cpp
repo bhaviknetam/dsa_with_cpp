@@ -1,29 +1,34 @@
 class MyQueue {
+private: stack<int> s1, s2;
 public:
-    stack<int> s1, s2;
     MyQueue() {
+        
     }
     
     void push(int x) {
-        while(!s2.empty()){
-            s1.push(s2.top());
-            s2.pop();
-        }
         s1.push(x);
     }
     
     int pop() {
+        if(!s2.empty()){
+            int x = s2.top();
+            s2.pop();
+            return x;
+        }
         while(!s1.empty()){
             s2.push(s1.top());
             s1.pop();
         }
-        int a = s2.top();
+        int x = s2.top();
         s2.pop();
-        return a;
+        return x;
     }
     
     int peek() {
-            while(!s1.empty()){
+        if(!s2.empty()){
+            return s2.top();
+        }
+        while(!s1.empty()){
             s2.push(s1.top());
             s1.pop();
         }
@@ -31,9 +36,7 @@ public:
     }
     
     bool empty() {
-        if(s1.empty() and s2.empty())
-            return true;
-        return false;
+        return s1.empty() & s2.empty();
     }
 };
 
