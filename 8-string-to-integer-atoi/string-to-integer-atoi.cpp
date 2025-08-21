@@ -2,19 +2,19 @@ class Solution {
 public:
     int myAtoi(string s) {
         int n = s.size();
-        int i = 0, j = 0;
-        while(s[i] == ' ') i++;
-        bool neg = (s[i] == '-' ? 1 : 0);
-        if(neg || s[i] == '+') i++;
-        j = i;
-        while(s[i] >= '0' && s[i] <= '9') i++;
-        long long num = 0;
-        for(; j < i; j++){
-            if(num > INT_MAX) return (neg ? INT_MIN : INT_MAX);
-            num = num * 10 + (s[j] - '0');
+        int i = 0, sign = 1;
+        while(i < n && s[i] == ' ') i++;
+        if(s[i] == '+' || s[i] == '-'){
+            sign = (s[i] == '-' ? -1 : 1);
+            i++;
         }
-        if(num > INT_MAX) return (neg ? INT_MIN : INT_MAX);
-        if(neg) num = -num;
-        return num;
+        long long num = 0;
+        while(i < n && isdigit(s[i])){
+            num = num * 10 + (s[i] - '0');
+            if(num * sign < INT_MIN) return INT_MIN;
+            if(num * sign > INT_MAX) return INT_MAX;
+            i++;
+        }
+        return num * sign;
     }
 };
