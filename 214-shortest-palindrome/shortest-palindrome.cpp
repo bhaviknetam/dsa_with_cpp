@@ -26,7 +26,6 @@ public:
         vector<int> lcp(t.size());
         LCP(t, lcp);
         int n = s.size();
-        for(int i:lcp)cout <<i<<';';
         string ans = s;
         reverse(ans.begin(), ans.end());
         int ct = n - lcp.back();
