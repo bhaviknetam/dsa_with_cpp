@@ -1,111 +1,77 @@
-#include <bits/stdc++.h>
-using namespace std;
-
-struct Node {
+struct Node{
     int key, val, freq;
     Node *prev, *next;
     Node(int k, int v)
-      : key(k), val(v), freq(1), prev(nullptr), next(nullptr)
-    {}
+        : key(k), val(v), freq(1), prev(NULL), next(NULL){}
 };
 
 class LFUCache {
 private:
-    int capacity, currSize, minf;
-    // key → Node*
     unordered_map<int, Node*> cache;
-    // freq → {head, tail} of a doubly-linked list of Nodes with that freq
-    unordered_map<int, pair<Node*,Node*>> freqList;
+    unordered_map<int, pair<Node*, Node*>> freq;
+    int capacity, minf;
 
-    // Remove node from its current freq‐list, updating head/tail,
-    // erasing the list if it becomes empty, and bumping minf if needed.
-    void detach(Node* node) {
-        int f = node->freq;
-        auto &bucket = freqList[f];
-        Node* &head = bucket.first;
-        Node* &tail = bucket.second;
+    void detach(Node* node){ 
+        auto &[head, tail] = freq[node->freq];
+        if(node->prev) node->prev->next = node->next;
+        else head = node->next;
 
-        // unlink
-        if (node->prev) node->prev->next = node->next;
-        else            head = node->next;
+        if(node->next) node->next->prev = node->prev;
+        else tail = node->prev;
 
-        if (node->next) node->next->prev = node->prev;
-        else            tail = node->prev;
-
-        node->prev = node->next = nullptr;
-
-        // if that freq‐list is now empty, remove it
-        if (!head) {
-            freqList.erase(f);
-            if (minf == f) 
-                minf++;
+        node->next = node->prev = nullptr;
+        if(!head){
+            freq.erase(node->freq);
+            if(minf == node->freq) minf++;
         }
     }
 
-    // Append node to the tail of its freq‐list (new or existing)
-    void attach(Node* node) {
-        int f = node->freq;
-        auto &bucket = freqList[f];
-        Node* &head = bucket.first;
-        Node* &tail = bucket.second;
-
-        if (!tail) {
+    void attach(Node* node){
+        auto &[head, tail] = freq[node->freq];
+        if(!tail){
             head = tail = node;
-        } else {
+        }else{
             tail->next = node;
             node->prev = tail;
             tail = node;
         }
     }
 
-public:
-    LFUCache(int capacity)
-      : capacity(capacity), currSize(0), minf(0)
-    {}
-
-    int get(int key) {
-        auto it = cache.find(key);
-        if (it == cache.end())
-            return -1;
-
-        Node* node = it->second;
+    void moveToNext(Node* node){
         detach(node);
-
-        node->freq++;
+        node->freq += 1;
         attach(node);
-
-        return node->val;
     }
 
-    void put(int key, int value) {
-        if (capacity <= 0) 
-            return;
-
-        // update existing
+public:
+    LFUCache(int capacity) : capacity(capacity), minf(1) {}
+    
+    int get(int key) {
         auto it = cache.find(key);
-        if (it != cache.end()) {
-            Node* node = it->second;
+        if(it == cache.end()) return -1;
+        auto node = cache[key];
+        moveToNext(node);
+        return node->val;
+    }
+    
+    void put(int key, int value) {
+        if(capacity <= 0) return ;
+        auto it = cache.find(key);
+        if(it != cache.end()){
+            auto node = it->second;
             node->val = value;
-            // bump frequency via get
-            get(key);
+            moveToNext(node);
             return;
         }
-
-        // evict if full
-        if (currSize == capacity) {
-            // least‐freq = minf, LRU in that bucket = head
-            Node* nodeEvict = freqList[minf].first;
-            detach(nodeEvict);
-            cache.erase(nodeEvict->key);
-            delete nodeEvict;
-            currSize--;
+        if(cache.size() == capacity){
+            auto node = freq[minf].first;
+            detach(node);
+            cache.erase(node->key);
+            delete node;
         }
-
-        // insert new with freq=1
         Node* node = new Node(key, value);
         cache[key] = node;
         minf = 1;
-        currSize++;
         attach(node);
     }
 };
