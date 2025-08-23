@@ -1,30 +1,68 @@
+struct Node{
+    int key, val;
+    Node *prev, *next;
+    Node(int k, int v):key(k), val(v), prev(NULL), next(NULL){}
+};
+
 class LRUCache {
-private:unordered_map<int, list<pair<int, int>>::iterator> cache;
-        list<pair<int, int>> li;
-        int size;
-public:
-    LRUCache(int capacity) {
-        size = capacity;
+private:
+    unordered_map<int, Node*> cache;
+    Node *head, *tail;
+    int capacity;
+
+    void detach(Node* node){
+        if(node->prev) node->prev->next = node->next;
+        else head = head->next;
+        
+        if(node->next) node->next->prev = node->prev;
+        else tail = tail->prev;
+        node->prev = node->next = nullptr;
     }
+
+    void attach(Node* node){
+        if(!tail){
+            head = tail = node;
+        }else{
+            tail->next = node;
+            node->prev = tail;
+            tail = node;
+        }
+    }
+
+    void moveToLast(Node* node){
+        detach(node);
+        attach(node);
+    }
+
+public:
+    LRUCache(int capacity):capacity(capacity),head(NULL),tail(NULL) {}
     
     int get(int key) {
-        if(cache.find(key) == cache.end()) return -1;
-        li.splice(li.begin(), li, cache[key]);
-        return cache[key]->second;
+        auto it = cache.find(key);
+        if(it == cache.end()) return -1;
+        auto node = it->second;
+        moveToLast(node);
+        return node->val;
     }
     
     void put(int key, int value) {
-        if(cache.find(key) != cache.end()){
-            li.splice(li.begin(), li, cache[key]);
-            cache[key]->second = value;
+        if(capacity <= 0) return;
+        auto it = cache.find(key);
+        if(it != cache.end()){
+            auto node = it->second;
+            node->val = value;
+            moveToLast(node);
             return;
         }
-        if(cache.size() == size){
-            cache.erase(li.back().first);
-            li.pop_back();
+        if(cache.size() == capacity){
+            auto node = head;
+            detach(node); // add a line for node
+            cache.erase(node->key);
+            delete node;
         }
-        li.emplace_front(key, value);
-        cache[key] = li.begin();
+        Node* node = new Node(key, value);
+        cache[key] = node;
+        attach(node);
     }
 };
 
