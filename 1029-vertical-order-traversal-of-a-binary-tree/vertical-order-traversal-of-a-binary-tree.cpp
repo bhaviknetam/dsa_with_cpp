@@ -13,7 +13,7 @@ class Solution {
 public:
     vector<vector<int>> verticalTraversal(TreeNode* root) {
         if(!root) return {};
-        map<int, multiset<pair<int, int>>> m;
+        map<int, vector<pair<int, int>>> m;
         queue<pair<pair<int, int>, TreeNode*>> q;
         q.push({{0, 0}, root});
         while(!q.empty()){
@@ -21,14 +21,16 @@ public:
             int row = loc.first;
             int col = loc.second;
             q.pop();
-            m[col].insert({row, node->val});
+            m[col].push_back({row, node->val});
             if(node->left) q.push({{row+1, col-1}, node->left});
             if(node->right) q.push({{row+1, col+1}, node->right});
         }
+
         vector<vector<int>> ans;
-        for(auto& s : m){
+        for(auto& [col, s] : m){
+            sort(s.begin(), s.end());
             vector<int> v;
-            for(auto& [row, val] : s.second){
+            for(auto& [row, val] : s){
                 v.push_back(val);
             }
             ans.push_back(v);
