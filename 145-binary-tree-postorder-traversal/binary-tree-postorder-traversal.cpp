@@ -10,15 +10,7 @@
  * };
  */
 class Solution {
-private:
-    vector<int> ans;
 public:
-    void traverse(TreeNode* root){
-        if(root == nullptr) return;
-        traverse(root->left);
-        traverse(root->right);
-        ans.push_back(root->val);
-    }
     vector<int> postorderTraversal(TreeNode* root) {
         vector<int> ans;
         TreeNode* curr = root;
