@@ -10,17 +10,29 @@
  * };
  */
 class Solution {
-private:
-    vector<int> ans;
 public:
-    void traverse(TreeNode* root){
-        if(root == nullptr) return;
-        traverse(root->left);
-        ans.push_back(root->val);
-        traverse(root->right);
-    }
     vector<int> inorderTraversal(TreeNode* root) {
-        traverse(root);
+        vector<int> ans;
+        TreeNode* curr = root;
+        while(curr != NULL){
+            if(!curr->left){
+                ans.push_back(curr->val);
+                curr = curr->right;
+            }else{
+                TreeNode* last = curr->left;
+                while(last->right && last->right != curr){
+                    last = last->right;
+                }
+                if(!last->right){
+                    last->right = curr;
+                    curr = curr->left;
+                }else{
+                    last->right = NULL;
+                    ans.push_back(curr->val);
+                    curr = curr->right;
+                }
+            }
+        }
         return ans;
     }
 };
