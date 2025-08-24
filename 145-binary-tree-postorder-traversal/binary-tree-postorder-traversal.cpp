@@ -20,7 +20,28 @@ public:
         ans.push_back(root->val);
     }
     vector<int> postorderTraversal(TreeNode* root) {
-        traverse(root);
+        vector<int> ans;
+        TreeNode* curr = root;
+        while(curr){
+            if(!curr->right){
+                ans.push_back(curr->val);
+                curr = curr->left;
+            }else{
+                TreeNode* last = curr->right;
+                while(last->left && last->left != curr){
+                    last = last->left;
+                }
+                if(!last->left){
+                    ans.push_back(curr->val);
+                    last->left = curr;
+                    curr = curr->right;
+                }else{
+                    last->left = NULL;
+                    curr = curr->left;
+                }
+            }
+        }
+        reverse(ans.begin(), ans.end());
         return ans;
     }
 };
