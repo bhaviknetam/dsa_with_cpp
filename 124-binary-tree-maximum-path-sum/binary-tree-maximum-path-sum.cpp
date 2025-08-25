@@ -10,18 +10,17 @@
  * };
  */
 class Solution {
-private: int ans;
+private:
+    int ans;
 public:
-    int dfs(TreeNode* node){
-        if(node == nullptr) return 0;
-        int sum = node->val;
-        int left = dfs(node->left);
-        int right = dfs(node->right);
-        int temp = max({sum, sum + left, sum + right});
-        ans = max({ans, sum + left + right, temp});
-        return temp;
+    int dfs(TreeNode* root){
+        if(!root) return 0;
+        int left = max(0, dfs(root->left));
+        int right = max(0, dfs(root->right));
+        if(ans < left + root->val + right)
+            ans = left + root->val + right;
+        return root->val + max(left, right);
     }
-
     int maxPathSum(TreeNode* root) {
         ans = INT_MIN;
         dfs(root);
