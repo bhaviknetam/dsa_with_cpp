@@ -15,12 +15,12 @@ public:
         if(!root) return false;
         bool mid = (root == p || root == q);
         bool left = check(root->left, p, q);
-        if(mid & left){
+        if(mid && left){
             ans = root;
             return true;
         }
         bool right = check(root->right, p, q);
-        if(mid & right || left & right) {
+        if(mid && right || left && right) {
             ans = root;
             return true;
         }
