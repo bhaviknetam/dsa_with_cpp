@@ -15,11 +15,11 @@ private:
 public:
     int dfs(TreeNode* node){
         if(!node)
-            return -1;
-        int left = 1 + dfs(node->left);
-        int right = 1 + dfs(node->right);
+            return 0;
+        int left = dfs(node->left);
+        int right = dfs(node->right);
         ans = max(ans, left + right);
-        return max(left, right);
+        return 1 + max(left, right);
     }
 
     int diameterOfBinaryTree(TreeNode* root) {
