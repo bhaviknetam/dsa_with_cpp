@@ -12,7 +12,7 @@
  */
 class Solution {
 private:
-    unordered_map<int, int> preMap, inMap;
+    unordered_map<int, int> inMap;
 
 public:
     TreeNode* createTree(int preL, int preR, int inL, int inR, vector<int>& pre, vector<int>& in) {
@@ -22,20 +22,37 @@ public:
         TreeNode* root = new TreeNode(curr);
         if (inR == inL)
             return root;
-        int tot = inMap[curr] - inL;
+        int mid = inMap[curr];
+        int leftSize = mid - inL;
         root->left =
-            createTree(preL + 1, preL + tot, inL, inMap[curr] - 1, pre, in);
+            createTree(preL + 1, preL + leftSize, inL, mid-1, pre, in);
         root->right =
-            createTree(preL + tot + 1, preR, inMap[curr] + 1, inR, pre, in);
+            createTree(preL + leftSize+ 1, preR,mid + 1, inR, pre, in);
         return root;
     }
 
     TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
         int n = preorder.size();
-        for (int i = 0; i < n; i++) {
-            preMap[preorder[i]] = i;
-            inMap[inorder[i]] = i;
+        int inIndex = 0;
+        stack<TreeNode*> s;
+        TreeNode* root = new TreeNode(preorder[0]);
+        s.push(root);
+        for(int i = 1; i < n; i++){
+            int val = preorder[i];
+            auto node = s.top();
+            if(node->val != inorder[inIndex]){
+                node->left = new TreeNode(val);
+                s.push(node->left);
+            }else{
+                while(!s.empty() && s.top()->val == inorder[inIndex]){
+                    node = s.top();
+                    s.pop();
+                    inIndex++;
+                }
+                node->right = new TreeNode(val);
+                s.push(node->right);
+            }
         }
-        return createTree(0, n - 1, 0, n - 1, preorder, inorder);
+        return root;
     }
 };
