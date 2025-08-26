@@ -22,17 +22,10 @@ public:
                     last = last->right;
                 }
                 last->right = curr->right;
-                curr->right = nullptr;
-                curr = curr->left;
-            }
-        }
-        curr = root;
-        while(curr){
-            if(curr->left){
                 curr->right = curr->left;
                 curr->left = nullptr;
+                curr = curr->right;
             }
-            curr = curr->right;
         }
     }
 };
