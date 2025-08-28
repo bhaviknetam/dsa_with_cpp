@@ -12,23 +12,23 @@
 class BSTIterator {
 private:
     stack<TreeNode*> s;
-public:
-    BSTIterator(TreeNode* root) {
+    void pushAll(TreeNode* root){
         while(root){
             s.push(root);
             root = root->left;
         }
+    }
+
+public:
+    BSTIterator(TreeNode* root) {
+        pushAll(root);
     }
     
     int next() {
         if(s.empty()) return -1;
         TreeNode* node = s.top();
         s.pop();
-        TreeNode* curr = node->right;
-        while(curr){
-            s.push(curr);
-            curr = curr->left;
-        }
+        pushAll(node->right);
         return node->val;
     }
     
