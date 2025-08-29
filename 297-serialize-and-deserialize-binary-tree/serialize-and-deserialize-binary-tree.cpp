@@ -14,8 +14,7 @@ public:
             s += "N,";
             return;
         }
-        s += to_string(root->val);
-        s.push_back(',');
+        s += to_string(root->val) + ",";
         preorder(root->left, s);
         preorder(root->right, s);
     }
@@ -24,29 +23,22 @@ public:
     string serialize(TreeNode* root) {
         string s;
         preorder(root, s);
-        s.pop_back();
-        // cout << s << ';';
         return s;
     }
 
     TreeNode* createTree(int& i, string& s){
-        if(s[i] == 'N' || i >= s.size()){
-            i++;
+        if(i >= s.size()) return nullptr;
+        if(s[i] == 'N'){
+            i += 2;
             return nullptr;
         }
         string t;
-        while(s[i] != ','){
-            t.push_back(s[i]);
-            i++;
-        }
-        if(t.empty()) return nullptr;
-        int val = stoi(t);
+        int j = i;
+        while (s[j] != ',') j++;
+        int val = stoi(s.substr(i, j - i));
         TreeNode* root = new TreeNode(val);
-        i++;
-        // cout <<i<<'/';
+        i = j + 1;
         root->left = createTree(i, s);
-        i++;
-        // cout << i << '.';
         root->right = createTree(i, s);
         return root;
     }
