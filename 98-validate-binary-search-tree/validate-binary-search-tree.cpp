@@ -11,47 +11,40 @@
  */
 class Solution {
 public:
-    bool isBSTUtil(TreeNode* node, long long min, long long max) {
-        if (node == nullptr) 
-            return true;
-
-        // If the current node's data 
-        // is not in the valid range, return false
-        if (node->val < min || node->val > max) 
-            return false;
-
-        // Recursively check the left and 
-        // right subtrees with updated ranges
-        return isBSTUtil(node->left, min, (long long)node->val - 1) &&
-            isBSTUtil(node->right, (long long)node->val + 1, max);
-    }
     bool isValidBST(TreeNode* root) {
         if(!root) return true;
-        return isBSTUtil(root, LLONG_MIN, LLONG_MAX);
-        TreeNode* curr = root;
-        long long prev = LLONG_MIN;
-        bool valid = true;
-        while(curr){
-            if(!curr->left){
-                if(curr->val <= prev) valid = false;
-                prev = curr->val;
-                curr = curr->right;
+        struct Frame {
+            TreeNode* node;
+            int state;
+            pair<long, long> leftVal, rightVal;
+        };
+        stack<Frame> s;
+        s.push({root, 0, {0, 0}, {0, 0}});
+        pair<long, long> result = {0, 0}; // min, max
+        while(!s.empty()){
+            auto &f = s.top();
+            auto u = f.node;
+            if(!u){
+                result = {LLONG_MAX, LLONG_MIN};
+                s.pop();
+                continue;
+            }
+            if(f.state == 0){
+                f.state = 1;
+                s.push({u->left, 0, {0,0}, {0,0}});
+            }else if(f.state == 1){
+                f.leftVal = result;
+                f.state = 2;
+                s.push({u->right, 0, {0,0}, {0,0}});
             }else{
-                TreeNode* last = curr->left;
-                while(last->right && last->right != curr){
-                    last = last->right;
-                }
-                if(!last->right){
-                    last->right = curr;
-                    curr = curr->left;
-                }else{
-                    last->right = nullptr;
-                    if(curr->val <= prev) valid = false;
-                    prev = curr->val;
-                    curr = curr->right;
-                }
+                f.rightVal = result;
+                if(u->val>f.leftVal.second && u->val<f.rightVal.first){
+                    result = {min((long)u->val, f.leftVal.first),
+                    max((long)u->val, f.rightVal.second)};
+                    s.pop();
+                }else return false;
             }
         }
-        return valid;
+        return true;
     }
 };
