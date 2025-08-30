@@ -4,9 +4,7 @@ public:
         vector<vector<int>> adj(numCourses);
         vector<int> indegree(numCourses, 0);
         for(auto& v : prerequisites){
-            if(v[0] != v[1])
-                adj[v[1]].push_back(v[0]), indegree[v[0]]++;
-            else return false;
+            adj[v[1]].push_back(v[0]), indegree[v[0]]++;
         }
         queue<int> q;
         for(int i = 0; i < numCourses; i++){
@@ -24,7 +22,6 @@ public:
                 }
             }
         }
-        if(cnt == numCourses) return true;
-        return false;
+        return (cnt == numCourses);
     }
 };
