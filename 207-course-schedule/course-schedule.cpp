@@ -1,32 +1,30 @@
 class Solution {
-private:
-    vector<int> color;
 public:
-    bool dfs(int node, vector<vector<int>>& adj){
-        color[node] = 1;
-        for(int& n : adj[node]){
-            if(color[n] == 0 && !dfs(n, adj)){
-                return false;
-            }else if(color[n] == 1){
-                return false;
-            }
-        }
-        color[node] = 2;
-        return true;
-    }
     bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
         vector<vector<int>> adj(numCourses);
-        color.assign(numCourses, 0);
+        vector<int> indegree(numCourses, 0);
         for(auto& v : prerequisites){
             if(v[0] != v[1])
-                adj[v[1]].push_back(v[0]);
+                adj[v[1]].push_back(v[0]), indegree[v[0]]++;
             else return false;
         }
+        queue<int> q;
         for(int i = 0; i < numCourses; i++){
-            if(color[i] == 0 && !dfs(i, adj)){
-                return false;
+            if(indegree[i] == 0) q.push(i);
+        }
+        int cnt = 0;
+        while(!q.empty()){
+            int node = q.front();
+            q.pop();
+            cnt++;
+            for(int& neighbor : adj[node]){
+                indegree[neighbor]--;
+                if(indegree[neighbor] == 0){
+                    q.push(neighbor);
+                }
             }
         }
-        return true;
+        if(cnt == numCourses) return true;
+        return false;
     }
 };
