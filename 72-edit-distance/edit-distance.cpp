@@ -1,8 +1,6 @@
 class Solution {
 public:
     int minDistance(string word1, string word2) {
-        if(word1.size() > word2.size()) 
-            return minDistance(word2, word1);
         int n = word1.size();
         int m = word2.size();
         vector<vector<int>> dp(n+1, vector<int>(m+1));
