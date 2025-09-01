@@ -1,30 +1,27 @@
 class Solution {
-private:
-    vector<vector<int>> dp;
 public:
-    int func(int i, int j, string& word1, string& word2){
-        if(j == word2.size() && i == word1.size()){
-            return 0;
-        }
-        if(dp[i][j] != -1){
-            return dp[i][j];
-        }
-        int ans = 0;
-        if(j >= word2.size()){
-            ans = 1 + func(i+1, j, word1, word2);
-        }else if(i >= word1.size()){
-            ans = 1 + func(i, j + 1, word1, word2);
-        }else if(word1[i] != word2[j]){
-            ans = 1 + min({func(i, j + 1, word1, word2),func(i+1, j+1, word1, word2), func(i+1, j, word1, word2)});
-        }else{
-            ans = func(i+1, j+1, word1, word2);
-        }
-        return dp[i][j] = ans;
-    }
     int minDistance(string word1, string word2) {
         if(word1.size() > word2.size()) 
             return minDistance(word2, word1);
-        dp.assign(word1.size() + 1, vector<int>(word2.size() + 1, -1));
-        return func(0, 0, word1, word2);
+        int n = word1.size();
+        int m = word2.size();
+        vector<vector<int>> dp(n+1, vector<int>(m+1));
+        for(int i = 0; i <= n; i++){
+            dp[i][0] = i;
+        }
+        for(int j = 0; j <= m; j++){
+            dp[0][j] = j;
+        }
+        for(int i = 1; i <=n; i++){
+            for(int j = 1; j <= m; j++){
+                if(word1[i-1] == word2[j-1]){
+                    dp[i][j] = dp[i-1][j-1];
+                }else{
+                    dp[i][j] = 1 + min({dp[i][j-1], dp[i-1][j], dp[i-1][j-1]});
+                }
+            }
+        }
+
+        return dp[n][m];
     }
 };
