@@ -29,7 +29,15 @@ public:
                 }
             }
         }
-        cutdp.assign(n + 1, -1);
-        return helper(0, s, dp);
+        cutdp.assign(n + 1, 1e8);
+        cutdp[n] = -1;
+        for(int i = n - 1; i >= 0; i--){
+            for(int j = i; j < n; j++){
+                if(dp[i][j]){
+                    cutdp[i] = min(cutdp[i], 1 + cutdp[j+1]);
+                }
+            }
+        }
+        return cutdp[0];
     }
 };
