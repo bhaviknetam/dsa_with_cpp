@@ -1,24 +1,19 @@
 class Solution {
-private: vector<int> dp;
 public:
-    bool helper(int start, string s, unordered_set<string>& dict){
+    bool wordBreak(string s, vector<string>& wordDict) {
         int n = s.size();
-        if(start == n){
-            return true;
-        }
-        if(dp[start] != -1) return dp[start];
-        string t;
-        for(int i = start; i < n; i++){
-            t.push_back(s[i]);
-            if(dict.count(t) && helper(i + 1, s, dict)){
-                return dp[start] = true;
+        vector<bool> dp(n + 1, false);
+        dp[0] = true;
+        for(int i = 1; i <= n; i++){
+            for(auto& word : wordDict){
+                int start = i - word.length();
+                if(start >= 0 && dp[start] && 
+                    s.substr(start, word.length()) == word){
+                        dp[i] = true;
+                        break;
+                }
             }
         }
-        return dp[start] = false;
-    }
-    bool wordBreak(string s, vector<string>& wordDict) {
-        unordered_set<string> dict(wordDict.begin(), wordDict.end());
-        dp.resize(s.size() + 1, -1);
-        return helper(0, s, dict);
+        return dp[n];
     }
 };
