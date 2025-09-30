@@ -10,33 +10,31 @@
  */
 class Solution {
 public:
-    void reverseEach(ListNode* node, ListNode* prev, ListNode* tail){
-        if(node == tail) return;
-        reverseEach(node->next, node, tail);
-        node->next = prev;
-    }
     void reverse(ListNode* head, ListNode* tail){
-        reverseEach(head, tail, tail);
+        if(head == tail) return;
+        reverse(head->next, tail);
+        head->next->next = head;
     }
+
     ListNode* reverseKGroup(ListNode* head, int k) {
+        if(k == 1) return head;
         ListNode* dummy = new ListNode();
         dummy->next = head;
-        ListNode* nxt = head;
-        ListNode* curr = dummy;
-        int ct = 0;
-        while(nxt){
-            ct++;
-            // cout << ct << '/';
-            if(ct == k){
-                ct = 0;
-                curr->next = nxt;
-                nxt = nxt->next;
-                reverse(head, nxt);
-                curr = head;
-                head = nxt;
-                continue;
+        ListNode* prev = dummy;
+        while(head){
+            int ct = 1;
+            ListNode* start = head;
+            while(head->next && ct < k){
+                ct++;
+                head = head->next;
             }
-            nxt = nxt->next;
+            if(ct < k) break;
+            ListNode* temp = head->next;
+            reverse(start, head);
+            start->next = temp;
+            prev->next = head;
+            prev = start;
+            head = temp;
         }
         return dummy->next;
     }
