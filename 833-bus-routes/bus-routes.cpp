@@ -1,35 +1,29 @@
 class Solution {
 public:
-    int numBusesToDestination(vector<vector<int>>& routes, int source,
-                              int target) {
-        if (source == target)
-            return 0;
+    int numBusesToDestination(vector<vector<int>>& routes, int source, int target) {
+        if(source == target) return 0;
         int n = routes.size();
-        unordered_map<int, vector<int>> graph;
-        for (int i = 0; i < n; i++) {
-            for (int& stops : routes[i]) {
-                graph[stops].push_back(i);
+        unordered_map<int, vector<int>> adj;
+        for(int i = 0; i < n; i++){
+            for(int& path : routes[i]){
+                adj[path].push_back(i);
             }
         }
         queue<pair<int, int>> q;
-        vector<int> vis(n, false);
-        for (int& bus : graph[source]) {
-            q.push({bus, 1});
+        vector<bool> vis(n);
+        for(auto& bus : adj[source]){
+            q.push({1, bus});
             vis[bus] = true;
         }
-        unordered_set<int> visStops;
-        while (!q.empty()) {
-            int bus = q.front().first;
-            int busCount = q.front().second;
+        while(!q.empty()){
+            auto [ct, bus] = q.front();
             q.pop();
-            for (int& nextStop : routes[bus]) {
-                if(nextStop == target) return busCount;
-                if (visStops.count(nextStop))
-                    continue;
-                for (int& nextBus : graph[nextStop]) {
-                    if (!vis[nextBus]) {
+            for(int& path : routes[bus]){
+                if(path == target) return ct;
+                for(int& nextBus : adj[path]){
+                    if(!vis[nextBus]){
                         vis[nextBus] = true;
-                        q.push({nextBus, busCount + 1});
+                        q.push({ct + 1, nextBus});
                     }
                 }
             }
