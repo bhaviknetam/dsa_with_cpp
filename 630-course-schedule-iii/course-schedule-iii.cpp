@@ -3,7 +3,6 @@ public:
     int scheduleCourse(vector<vector<int>>& courses) {
         int n = courses.size();
         sort(courses.begin(), courses.end(), [&](auto a, auto b){
-            if(a[1] == b[1]) return a[0] > b[0];
             return a[1] < b[1];
         });
         priority_queue<int> pq;
