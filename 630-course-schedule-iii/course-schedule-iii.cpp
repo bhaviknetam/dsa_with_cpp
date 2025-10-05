@@ -9,17 +9,10 @@ public:
         priority_queue<int> pq;
         int time = 0;
         for(int i = 0; i < n; i++){
-            if(time + courses[i][0] <= courses[i][1]){
-                pq.push(courses[i][0]);
-                time += courses[i][0];
-            }else{
-                if(pq.empty()) continue;
-                if(courses[i][0] < pq.top()){
-                    time -= pq.top();
-                    pq.pop();
-                    pq.push(courses[i][0]);
-                    time += courses[i][0];
-                }
+            time += courses[i][0];
+            pq.push(courses[i][0]);
+            if(time > courses[i][1]){
+                time -= pq.top(); pq.pop();
             }
         }
         return pq.size();
