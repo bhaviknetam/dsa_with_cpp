@@ -35,8 +35,7 @@ public:
             if(newPower < 0) continue;
             for (auto& [v, t] : adj[u]) {
                 ll newTime = time + t;
-                if ((minTime[v] > newTime) ||
-                    (minTime[v] <= newTime && maxPow[v] < newPower)) {
+                if ((minTime[v] > newTime) || (maxPow[v] < newPower)) {
                     pq.push({v, {newTime, newPower}});
                 }
             }
