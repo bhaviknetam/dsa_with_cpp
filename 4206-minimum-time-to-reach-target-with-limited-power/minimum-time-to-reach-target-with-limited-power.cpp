@@ -20,22 +20,19 @@ public:
         priority_queue<pair<int, pair<ll, ll>>, vector<pair<int, pair<ll, ll>>>,
                        decltype(compare)> pq;
         pq.push({source, {0, power}});
-        vector<ll> minTime(n, LLONG_MAX), maxPow(n, LLONG_MIN);
-        minTime[source] = 0, maxPow[source] = power;
+        vector<vector<ll>> dp(n, vector<ll>(power + 1, LLONG_MAX));
         while (!pq.empty()) {
             auto [u, tp] = pq.top();
             auto [time, currPow] = tp;
             pq.pop();
             if(u == target) return {time, currPow};
-            if(time > minTime[u] && currPow <= maxPow[u]) continue;
-            if(u!=source && time == minTime[u] && currPow <= maxPow[u]) continue;
-            minTime[u] = min(minTime[u], time);
-            maxPow[u] = max(maxPow[u], currPow);
+            if(dp[u][currPow] <= time) continue;
+            dp[u][currPow] = time;
             ll newPower = currPow - cost[u];
             if(newPower < 0) continue;
             for (auto& [v, t] : adj[u]) {
                 ll newTime = time + t;
-                if ((minTime[v] > newTime) || (maxPow[v] < newPower)) {
+                if (dp[v][newPower] > newTime) {
                     pq.push({v, {newTime, newPower}});
                 }
             }
