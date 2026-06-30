@@ -29,7 +29,6 @@ public:
             if(u == target) return {time, currPow};
             if(time > minTime[u] && currPow <= maxPow[u]) continue;
             if(u!=source && time == minTime[u] && currPow <= maxPow[u]) continue;
-            if(u==source && time == minTime[u] && currPow < maxPow[u]) continue;
             minTime[u] = min(minTime[u], time);
             maxPow[u] = max(maxPow[u], currPow);
             ll newPower = currPow - cost[u];
